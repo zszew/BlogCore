@@ -38,15 +38,24 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      # Kroki do dodania przed kompilacją
+
+      - name: Static Analysis (Linting)
+        run: dotnet format --verify-no-changes
+      - name: Security Scan (Dependencies)
+        run: dotnet list package --vulnerable
+
       # 5. Kompilacja całego rozwiązania w trybie Release
       - name: Build solution
         run: dotnet build --no-restore --configuration Release
 
       # 6. Uruchomienie testów funkcjonalnych
       # Testcontainers automatycznie uruchomi SQL Server w Dockerze na Runnerze
-      - name: Run Functional Tests
-        run: dotnet test --no-build --configuration Release --logger
-          "trx;LogFileName=test_results.trx"
+      # - name: Run Functional Tests
+      #  run: dotnet test --no-build --configuration Release --logger
+      #    "trx;LogFileName=test_results.trx"
+      - name: Run Tests with Coverage
+        run: dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
 
       # 7. Przygotowanie wersji instalacyjnej aplikacji (Publish)
       - name: Publish Application
