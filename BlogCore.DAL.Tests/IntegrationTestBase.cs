@@ -140,7 +140,7 @@ namespace BlogCore.DAL.Tests
 
 
             // Assert
-            Assert.AreEqual(5, _context.Posts.Count());
+            Assert.AreEqual(15, _context.Posts.Count());
         }
 
          [TestMethod]
